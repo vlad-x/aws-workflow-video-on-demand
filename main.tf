@@ -12,6 +12,49 @@ locals {
   mediaconvert_job_name_base = "${var.project_base_name}-mediaconvert"
 }
 
+#--------------------------------------------------------------------------------
+# S3 bucket to upload video files to be transcoded
+#--------------------------------------------------------------------------------
+resource "aws_s3_bucket" "uploaded" {
+  bucket = "${var.input_bucket_name}"
+  acl    = "private"
+  force_destroy = true
+  tags = {
+    Project = "${var.project_base_name}"
+  }
+  lifecycle_rule {
+    id      = "uploaded"
+    enabled = true
+    tags = {
+      Project = "${var.project_base_name}"
+    }
+    expiration {
+      days = 1
+    }
+  }
+}
+#--------------------------------------------------------------------------------
+# S3 bucket for Elastic Transcoder to place transcoded video files.
+#--------------------------------------------------------------------------------
+resource "aws_s3_bucket" "transcoded" {
+  bucket = "${var.output_bucket_name}"
+  force_destroy = true
+  tags = {
+    Project = "${var.project_base_name}"
+  }
+  lifecycle_rule {
+    id      = "transcoded"
+    enabled = true
+    tags = {
+      Project = "${var.project_base_name}"
+    }
+    transition {
+      days          = 1
+      storage_class = "GLACIER"
+    }
+  }
+}
+
 resource "aws_lambda_function" "this" {
   filename         = var.lambda_zip_path
   function_name    = "${var.project_base_name}-lambda"
