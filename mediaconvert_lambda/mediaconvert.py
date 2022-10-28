@@ -5,13 +5,14 @@ import uuid
 import os
 
 import json
+from urllib.parse import unquote_plus 
 
 # Read environment variables
 
 def convert_video(event, context):
 
     sourceS3Bucket = event['Records'][0]['s3']['bucket']['name']
-    sourceS3Key = event['Records'][0]['s3']['object']['key']
+    sourceS3Key = unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
 
     destinationPath = "/".join(sourceS3Key.split('/')[:-1])
     destinationS3 = 's3://' + os.environ["OUTPUT_BUCKET"] + '/$fn$/'
@@ -37,7 +38,7 @@ def convert_video(event, context):
 
         # Update the job settings with the source video from the S3 event and destination
         # paths for converted videos
-        jobSettings['Inputs'][0]['FileInput'] = 's3://'+ sourceS3Bucket + '/' + sourceS3Key
+        jobSettings['Inputs'][0]['FileInput'] = 's3://'+ sourceS3Bucket + '/video/' + sourceS3Key
         jobSettings['OutputGroups'][0]['OutputGroupSettings']['HlsGroupSettings']['Destination'] = destinationS3 + "/hls/"
         jobSettings['OutputGroups'][1]['OutputGroupSettings']['FileGroupSettings']['Destination'] = destinationS3 + "/mp4/"
         print('jobSettings:')

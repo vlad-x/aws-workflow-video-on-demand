@@ -11,7 +11,7 @@ variable "input_bucket_name" {
 
 variable "output_bucket_name" {
     description = "Output bucket name which contains videos after transcoding."
-    default = "scoo-video-hosting"
+    default = "video.emill.fi"
     type = string
 }
 

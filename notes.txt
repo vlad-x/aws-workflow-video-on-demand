@@ -1,0 +1,24 @@
+@TODO
+
+1. replace lambda with a JS version
+
+https://gist.github.com/lhy880518/43d84a5e13215e981dae68dfe8c88547
+
+2. add hosting bucket policy
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::Bucket-Name/*"
+            ]
+        }
+    ]
+}

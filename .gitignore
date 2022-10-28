@@ -12,3 +12,8 @@ tmp
 *.tmp
 .vscode/
 .idea/
+.terraform/
+.terraform.lock.hcl
+mediaconvert_lambda.zip
+terraform.tfstate
+terraform.tfstate.backup
