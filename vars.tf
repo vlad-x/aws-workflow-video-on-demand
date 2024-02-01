@@ -22,7 +22,7 @@ variable "bucket_event_prefix" {
 
 variable "bucket_event_suffix" {
     description = "Element suffix to trigger lambda function."
-    default = "*"
+    default = ".mp4"
 }
 
 variable "project_base_name" {

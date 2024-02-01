@@ -15,7 +15,7 @@ def convert_video(event, context):
     sourceS3Key = unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
 
     destinationPath = "/".join(sourceS3Key.split('/')[:-1])
-    destinationS3 = 's3://' + os.environ["OUTPUT_BUCKET"] + '/$fn$/'
+    destinationS3 = 's3://' + os.environ["OUTPUT_BUCKET"] + '/video/$fn$/'
 
     mediaConvertRole = os.environ["MEDIACONVERT_ROLE_ARN"]
     mediaConvertEndpoint = os.environ["MEDIACONVERT_ENDPOINT"]
@@ -38,9 +38,9 @@ def convert_video(event, context):
 
         # Update the job settings with the source video from the S3 event and destination
         # paths for converted videos
-        jobSettings['Inputs'][0]['FileInput'] = 's3://'+ sourceS3Bucket + '/video/' + sourceS3Key
-        jobSettings['OutputGroups'][0]['OutputGroupSettings']['HlsGroupSettings']['Destination'] = destinationS3 + "/hls/"
-        jobSettings['OutputGroups'][1]['OutputGroupSettings']['FileGroupSettings']['Destination'] = destinationS3 + "/mp4/"
+        jobSettings['Inputs'][0]['FileInput'] = 's3://'+ sourceS3Bucket + '/' + sourceS3Key
+        jobSettings['OutputGroups'][0]['OutputGroupSettings']['HlsGroupSettings']['Destination'] = destinationS3 + "/"
+        jobSettings['OutputGroups'][1]['OutputGroupSettings']['FileGroupSettings']['Destination'] = destinationS3 + "/"
         print('jobSettings:')
         print(json.dumps(jobSettings))
 

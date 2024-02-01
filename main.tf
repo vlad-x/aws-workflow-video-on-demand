@@ -12,6 +12,29 @@ locals {
   mediaconvert_job_name_base = "${var.project_base_name}-mediaconvert"
 }
 
+resource "random_string" "random" {
+  length  = 8
+  special = false
+  upper   = false
+  numeric = false
+}
+
+resource "random_uuid" "lambda_src_hash" {
+  keepers = {
+    for filename in setunion(
+      fileset(path.module, "**.py"),
+    ) :
+    filename => filemd5("${path.module}/source")
+  }
+}
+
+data "archive_file" "transformer" {
+  type        = "zip"
+  source_dir = "${path.module}/mediaconvert_lambda"
+  output_path = var.lambda_zip_path
+}
+
+
 #--------------------------------------------------------------------------------
 # S3 bucket to upload video files to be transcoded
 #--------------------------------------------------------------------------------
